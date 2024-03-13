@@ -43,5 +43,23 @@ class UnauthorizedError extends Error {
 }
 
 const handleError = (error, res) => {
-    if(error instanceof)
-}
+  if (error instanceof InternalServerError) {
+    res.status(error.code).send(error.message);
+  } else if (
+    error instanceof BadRequestError ||
+    error instanceof ForbiddenError ||
+    error instanceof UnauthorizedError
+  ) {
+    res.status(error.code).send(error.data);
+  } else {
+    res.status(httpStatus.InternalServerError).send(error);
+  }
+};
+
+module.exports = {
+  handleError,
+  InternalServerError,
+  BadRequestError,
+  ForbiddenError,
+  UnauthorizedError,
+};
